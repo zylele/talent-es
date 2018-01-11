@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap-table/bootstrap-table.css">
+    <script src="/assets/jquery.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/bootstrap-table/bootstrap-table.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <div class="row m-b">
+        <label class="col-sm-1 control-label mtop">文档：</label>
+        <div class="col-sm-2">
+        <textarea id="talent" name="talent" placeholder="{&quot;id&quot;:123,&quot;doc&quot;:&quot;阿里高级中间件技术专家&quot;}" rows="10" cols="150"></textarea>
+        </div>
+    </div>
+
+    <div class="row m-b">
+        <div class="row m-b">
+            <button class="btn btn-primary" type="button" onclick="save()"><i
+                    class="fa fa-search"></i>&nbsp;添加
+            </button>
+        </div>
+    </div>
+
+    <div class="row m-b">
+        <label class="col-sm-1 control-label mtop">输入：</label>
+        <div class="col-sm-2">
+            <input id="q" name="q" class="form-control m-b">
+        </div>
+    </div>
+
+    <div class="row m-b">
+        <div class="row m-b">
+            <button class="btn btn-primary" type="button" onclick="query()"><i
+                    class="fa fa-search"></i>&nbsp;查询
+            </button>
+        </div>
+    </div>
+
+    <!-- Panel Other -->
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+            <div class="row row-lg">
+                <div class="col-sm-12">
+                    <div class="example-wrap">
+                        <div class="example">
+                            <table id="listTable" class="table table-bordered table-hover">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var strapTable = function (tableId, dataUrl, queryParam, columnsData) {
+        $('#' + tableId).bootstrapTable('destroy');
+        $('#' + tableId).bootstrapTable({
+            url: dataUrl,   //请求后台的URL（*）
+            contentType: "application/x-www-form-urlencoded",
+            method: 'post',      //请求方式（*）
+            cache: false,      //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true,     //是否显示分页（*）
+            queryParams: queryParam,//传递参数（*）
+            sidePagination: "client",   //分页方式：client客户端分页，server服务端分页（*）
+            pageSize: 10,      //每页的记录行数（*）
+            pageList: [10, 20, 50],  //可供选择的每页的行数（*）
+            columns: columnsData,
+            toggle: 'table',
+            paginationFirstText: '首页',
+            paginationPreText: '上一页',
+            paginationNextText: '下一页',
+            paginationLastText: '末页',
+            singleSelect: true,
+            height: 520,
+            clickToSelect: true
+        });
+    }
+
+    $(function () {
+        strapTable('listTable', 'api/talent/search', paginationParam, columnsData);
+    });
+
+    function paginationParam(params) {
+        return {
+            limit: params.limit,
+            page: $('#listTable').bootstrapTable('getOptions').pageNumber,
+            q: $('#q').val()
+        };
+    }
+
+    //初始化列表列
+    var columnsData = [
+        {
+            field: 'id',
+            title: 'id',
+            align: 'center'
+        }, {
+            field: 'doc',
+            title: 'doc',
+            align: 'center'
+        }, {
+            field: 'createTime',
+            title: 'time',
+            align: 'center',
+            formatter: formatTime
+        }];
+
+    // 查询
+    function query() {
+        $('#listTable').bootstrapTable('refresh', {silent: true});
+    }
+
+    function formatTime(row, value, index) {
+        var unixTimestamp = new Date( 1477386005*1000 ) ;
+        return unixTimestamp.toLocaleString();
+    }
+
+    function save() {
+        $.ajax({
+            type: "POST",
+            url: "api/talent",
+            contentType: "application/json",
+            data: $('#talent').val(),
+            success: function (result) {
+                alert("success:" + result);
+            },
+            error: function (result) {
+                alert("error:" + result);
+            }
+        });
+    }
+
+</script>
+</body>
+</html>
