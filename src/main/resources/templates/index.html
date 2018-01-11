@@ -118,7 +118,7 @@
     }
 
     function formatTime(row, value, index) {
-        var unixTimestamp = new Date( 1477386005*1000 ) ;
+        var unixTimestamp = new Date(value) ;
         return unixTimestamp.toLocaleString();
     }
 
