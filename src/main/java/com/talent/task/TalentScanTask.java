@@ -50,6 +50,7 @@ public class TalentScanTask {
 
                         //入库
                         Talent talent = new Talent();
+                        talent.setTitle(file.getName());
                         talent.setDoc(sb.toString());
                         talentService.generateIndex(talent);
 

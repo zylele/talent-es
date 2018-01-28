@@ -57,13 +57,17 @@
         return {
             limit: params.limit,
             page: $('#listTable').bootstrapTable('getOptions').pageNumber,
-            q: $('#q').val()
+            q: $.trim($('#q').val())
         };
     }
 
     //初始化列表列
     var columnsData = [
         {
+            field: 'title',
+            title: 'title',
+            align: 'center'
+        }, {
             field: 'doc',
             title: 'doc',
             align: 'center'
@@ -80,6 +84,9 @@
 
     // 查询
     function query() {
+        if($.trim($('#q').val()) === ""){
+            return;
+        }
         $('#listTable').bootstrapTable('refresh', {silent: true});
         $('#table-div').css("display", "inline");
     }

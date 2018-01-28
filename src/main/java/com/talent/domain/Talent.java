@@ -14,6 +14,8 @@ public class Talent implements Serializable{
 
     private String id;
 
+    private String title;
+
     private String doc;
 
     private Date createTime = new Date();
