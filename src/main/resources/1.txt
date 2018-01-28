@@ -1,0 +1,24 @@
+./bin/elasticsearch-plugin install https://github.com/medcl/elasticsearch-analysis-ik/releases/download/v6.1.2/elasticsearch-analysis-ik-6.1.2.zip
+
+curl -XPUT 'localhost:9200/talent_index/?pretty' -H 'Content-Type: application/json' -d'
+{
+  "mappings": {
+    "talent_type" : {
+      "properties" : {
+        "doc" : {
+          "type" : "text",
+          "analyzer": "ik_max_word",
+          "search_analyzer": "ik_max_word"
+        },
+        "createTime" : {
+          "type" : "date"
+        }
+      }
+    }
+  }
+}
+'
+
+
+
+
