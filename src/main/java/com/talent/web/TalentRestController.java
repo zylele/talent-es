@@ -35,11 +35,15 @@ public class TalentRestController {
     public PageResult searchTalent(TalentRequest talentRequest) {
         QueryResult<List<Talent>> queryResult = talentService.search(talentRequest);
 
-        for (Talent talent : queryResult.getValue()) {
-            if (talent.getDoc().length() > 20) {
-                talent.setDoc(talent.getDoc().substring(0, 20) + "...");
+        // 空搜索，无高亮，处理文本长度
+        if (talentRequest.getQ() == null && "".equals(talentRequest.getQ())) {
+            for (Talent talent : queryResult.getValue()) {
+                if (talent.getDoc().length() > 20) {
+                    talent.setDoc(talent.getDoc().substring(0, 20) + "...");
+                }
             }
         }
+
         PageResult pageResult = new PageResult();
         pageResult.setRows(queryResult.getValue());
         pageResult.setTotal(queryResult.getTotal());
