@@ -33,16 +33,11 @@ public class TalentRestController {
     @RequestMapping(value = "/api/talent/search")
     @ResponseBody
     public PageResult searchTalent(TalentRequest talentRequest) {
-        QueryResult<List<Talent>> queryResult = talentService.search(talentRequest);
-
-        // 空搜索，无高亮，处理文本长度
+        // 空搜索不处理
         if (talentRequest.getQ() == null && "".equals(talentRequest.getQ())) {
-            for (Talent talent : queryResult.getValue()) {
-                if (talent.getDoc().length() > 20) {
-                    talent.setDoc(talent.getDoc().substring(0, 20) + "...");
-                }
-            }
+            return new PageResult();
         }
+        QueryResult<List<Talent>> queryResult = talentService.search(talentRequest);
 
         PageResult pageResult = new PageResult();
         pageResult.setRows(queryResult.getValue());
@@ -58,7 +53,7 @@ public class TalentRestController {
             try {
                 Talent talent = list.get(0);
                 response.setContentType("application/octet-stream");
-                response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode("talent-" + talent.getId() + ".txt", "UTF-8"));
+                response.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(talent.getTitle(), "UTF-8"));
                 response.getOutputStream().write(talent.getDoc().getBytes("UTF-8"));
                 response.getOutputStream().flush();
                 response.getOutputStream().close();
